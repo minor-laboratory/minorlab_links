@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Copy, Check, AppleIcon, PlayIcon } from '@lucide/svelte';
+	import { Copy, Check } from '@lucide/svelte';
 	import { messages } from '$lib/i18n/messages';
 
 	let { data } = $props();
@@ -42,12 +42,16 @@
 	}
 
 	function openInApp() {
-		// Universal Link / App Link 재시도. OS 가 가로채지 못하면 같은 페이지 새로고침.
 		window.location.href = window.location.href;
 	}
 
 	const ok = $derived(data.preview.status === 'ok');
 	const ogImageUrl = 'https://rooty.minorlab.com/og-default.png';
+
+	const primaryStoreHref = $derived(isAndroid ? STORE_ANDROID : STORE_IOS);
+	const primaryStoreLabel = $derived(isAndroid ? t.playStore : t.appStore);
+	const secondaryStoreHref = $derived(isAndroid ? STORE_IOS : STORE_ANDROID);
+	const secondaryStoreLabel = $derived(isAndroid ? t.appStore : t.playStore);
 </script>
 
 <svelte:head>
@@ -68,30 +72,35 @@
 	{/if}
 </svelte:head>
 
-<main class="mx-auto flex min-h-dvh max-w-md flex-col px-5 pt-10 pb-12">
-	<header class="mb-8 flex items-center gap-2 text-rooty-fg">
+<main class="mx-auto flex min-h-dvh max-w-md flex-col px-5 pt-10 pb-10">
+	<header class="mb-10 flex items-center gap-2">
 		<span class="text-xl">🌱</span>
-		<span class="text-base font-semibold tracking-tight">{t.appName}</span>
+		<span class="text-base font-semibold tracking-tight text-rooty-fg">{t.appName}</span>
 	</header>
 
 	{#if data.preview.status === 'ok'}
 		{@const p = data.preview}
 		<section
-			class="bg-rooty-card border-rooty-border flex flex-col items-center rounded-[var(--radius-rooty)] border px-6 py-8 shadow-sm"
+			class="flex flex-col items-center bg-rooty-surface-container-high rounded-[var(--radius-rooty-card)] px-6 py-10"
 		>
-			<p class="text-rooty-muted text-sm">{t.invitedBy(p.leader_nickname)}</p>
-			<h1 class="mt-3 text-3xl font-bold tracking-tight">{p.group_name}</h1>
-			<p class="text-rooty-muted mt-1 text-sm">{t.memberCount(p.member_count)}</p>
+			<p class="text-sm text-rooty-muted">{t.invitedBy(p.leader_nickname)}</p>
+			<h1 class="mt-4 text-[28px] font-bold tracking-tight text-rooty-fg leading-tight text-center">
+				{p.group_name}
+			</h1>
+			<p class="mt-2 text-sm text-rooty-muted">{t.memberCount(p.member_count)}</p>
 
 			<p
-				class="text-rooty-muted mx-auto mt-6 max-w-xs text-center text-sm leading-relaxed whitespace-pre-line"
+				class="mt-8 max-w-xs text-center text-[15px] leading-relaxed text-rooty-fg whitespace-pre-line"
 			>
 				{t.onboarding}
 			</p>
+		</section>
 
-			<div class="mt-8 flex w-full items-center justify-center gap-2">
+		<section class="mt-6">
+			<p class="mb-2 text-xs font-medium text-rooty-muted">{t.codeHint}</p>
+			<div class="flex items-stretch gap-2">
 				<div
-					class="border-rooty-border bg-rooty-accent flex-1 rounded-[var(--radius-rooty)] border px-4 py-3 text-center font-mono text-2xl font-semibold tracking-[0.4em] tabular-nums select-all"
+					class="flex-1 flex items-center justify-center bg-rooty-surface-container rounded-[var(--radius-rooty-button)] px-4 py-4 font-mono text-[22px] font-semibold tracking-[0.35em] tabular-nums text-rooty-fg select-all"
 				>
 					{data.code}
 				</div>
@@ -99,89 +108,80 @@
 					type="button"
 					onclick={copyCode}
 					aria-label={t.copy}
-					class="border-rooty-border bg-rooty-card hover:bg-rooty-accent active:bg-rooty-accent flex h-[52px] w-[52px] items-center justify-center rounded-[var(--radius-rooty)] border transition-colors"
+					class="flex h-auto w-14 items-center justify-center bg-rooty-surface-container rounded-[var(--radius-rooty-button)] text-rooty-fg transition-colors hover:bg-rooty-outline-variant active:bg-rooty-outline-variant"
 				>
 					{#if copied}
-						<Check class="text-rooty-primary h-5 w-5" />
+						<Check class="h-5 w-5" />
 					{:else}
 						<Copy class="h-5 w-5" />
 					{/if}
 				</button>
 			</div>
-			<p class="text-rooty-muted mt-3 text-xs">{t.codeHint}</p>
 		</section>
 
-		<div class="mt-6 grid grid-cols-2 gap-3">
+		<section class="mt-6 flex flex-col gap-3">
 			<a
-				href={STORE_IOS}
-				class="border-rooty-border bg-rooty-card hover:bg-rooty-accent flex items-center justify-center gap-2 rounded-[var(--radius-rooty)] border px-4 py-3 text-sm font-medium transition-colors {isIOS
-					? 'ring-rooty-primary ring-2'
-					: ''}"
+				href={primaryStoreHref}
+				class="flex items-center justify-center bg-rooty-primary text-rooty-primary-fg rounded-[var(--radius-rooty-button)] px-4 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 active:opacity-80"
 			>
-				<AppleIcon class="h-4 w-4" />
-				{t.appStore}
+				{primaryStoreLabel}
 			</a>
 			<a
-				href={STORE_ANDROID}
-				class="border-rooty-border bg-rooty-card hover:bg-rooty-accent flex items-center justify-center gap-2 rounded-[var(--radius-rooty)] border px-4 py-3 text-sm font-medium transition-colors {isAndroid
-					? 'ring-rooty-primary ring-2'
-					: ''}"
+				href={secondaryStoreHref}
+				class="flex items-center justify-center border border-rooty-outline rounded-[var(--radius-rooty-button)] px-4 py-3.5 text-sm font-medium text-rooty-fg transition-colors hover:bg-rooty-surface-container active:bg-rooty-surface-container"
 			>
-				<PlayIcon class="h-4 w-4" />
-				{t.playStore}
+				{secondaryStoreLabel}
 			</a>
-		</div>
+		</section>
 
 		<div class="mt-8 text-center text-sm">
-			<p class="text-rooty-muted">{t.alreadyInstalled}</p>
+			<span class="text-rooty-muted">{t.alreadyInstalled} </span>
 			<button
 				type="button"
 				onclick={openInApp}
-				class="text-rooty-primary mt-1 font-semibold underline-offset-4 hover:underline"
+				class="font-semibold text-rooty-fg underline underline-offset-4"
 			>
 				{t.openInApp}
 			</button>
 		</div>
 	{:else}
 		<section
-			class="bg-rooty-card border-rooty-border flex flex-col items-center rounded-[var(--radius-rooty)] border px-6 py-10 text-center shadow-sm"
+			class="flex flex-col items-center text-center bg-rooty-surface-container-high rounded-[var(--radius-rooty-card)] px-6 py-12"
 		>
 			<div
-				class="bg-rooty-accent text-rooty-fg mb-4 flex h-12 w-12 items-center justify-center rounded-full text-2xl"
+				class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-rooty-surface-container text-2xl"
 			>
 				⏳
 			</div>
-			<h1 class="text-xl font-semibold">{t.errorTitle}</h1>
-			<p class="text-rooty-muted mt-2 text-sm leading-relaxed">
+			<h1 class="text-lg font-semibold text-rooty-fg">{t.errorTitle}</h1>
+			<p class="mt-2 text-sm leading-relaxed text-rooty-muted">
 				{data.preview.status === 'expired' ? t.expired : t.notFound}
 			</p>
 		</section>
 
-		<div class="mt-6 grid grid-cols-2 gap-3">
+		<section class="mt-6 flex flex-col gap-3">
 			<a
-				href={STORE_IOS}
-				class="border-rooty-border bg-rooty-card hover:bg-rooty-accent flex items-center justify-center gap-2 rounded-[var(--radius-rooty)] border px-4 py-3 text-sm font-medium transition-colors"
+				href={primaryStoreHref}
+				class="flex items-center justify-center bg-rooty-primary text-rooty-primary-fg rounded-[var(--radius-rooty-button)] px-4 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 active:opacity-80"
 			>
-				<AppleIcon class="h-4 w-4" />
-				{t.appStore}
+				{primaryStoreLabel}
 			</a>
 			<a
-				href={STORE_ANDROID}
-				class="border-rooty-border bg-rooty-card hover:bg-rooty-accent flex items-center justify-center gap-2 rounded-[var(--radius-rooty)] border px-4 py-3 text-sm font-medium transition-colors"
+				href={secondaryStoreHref}
+				class="flex items-center justify-center border border-rooty-outline rounded-[var(--radius-rooty-button)] px-4 py-3.5 text-sm font-medium text-rooty-fg transition-colors hover:bg-rooty-surface-container active:bg-rooty-surface-container"
 			>
-				<PlayIcon class="h-4 w-4" />
-				{t.playStore}
+				{secondaryStoreLabel}
 			</a>
-		</div>
+		</section>
 	{/if}
 
 	{#if toast}
 		<div
 			role="status"
 			aria-live="polite"
-			class="fixed inset-x-0 bottom-8 mx-auto w-fit max-w-[90%] rounded-full px-4 py-2 text-sm font-medium shadow-lg
+			class="fixed inset-x-0 bottom-8 mx-auto w-fit max-w-[90%] rounded-full px-4 py-2.5 text-sm font-medium shadow-lg
 			{toast.tone === 'ok'
-				? 'bg-rooty-fg text-rooty-card'
+				? 'bg-rooty-fg text-rooty-primary-fg'
 				: 'bg-amber-500 text-white'}"
 		>
 			{toast.message}
