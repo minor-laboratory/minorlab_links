@@ -15,7 +15,8 @@
       "namespace": "android_app",
       "package_name": "com.minorlab.rooty.dev",
       "sha256_cert_fingerprints": [
-        "61:AE:42:B7:A4:9B:FF:6A:84:6F:CD:FC:79:0D:3A:7E:25:7A:46:18:35:72:96:BD:43:93:9B:84:F1:BA:38:98"
+        "61:AE:42:B7:A4:9B:FF:6A:84:6F:CD:FC:79:0D:3A:7E:25:7A:46:18:35:72:96:BD:43:93:9B:84:F1:BA:38:98",
+        "8B:55:27:A2:AC:5C:34:F8:F4:34:34:25:DC:7B:17:DC:C1:09:51:92:C0:6A:3F:AB:9C:BF:84:E2:15:C9:4E:A1"
       ]
     }
   }
