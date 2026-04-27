@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@source '../src/**/*.{html,js,svelte,ts}';
 
 @theme {
 	--color-rooty-bg: oklch(0.985 0.005 95);
