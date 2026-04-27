@@ -8,5 +8,15 @@
         "61:AE:42:B7:A4:9B:FF:6A:84:6F:CD:FC:79:0D:3A:7E:25:7A:46:18:35:72:96:BD:43:93:9B:84:F1:BA:38:98"
       ]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.minorlab.rooty.dev",
+      "sha256_cert_fingerprints": [
+        "61:AE:42:B7:A4:9B:FF:6A:84:6F:CD:FC:79:0D:3A:7E:25:7A:46:18:35:72:96:BD:43:93:9B:84:F1:BA:38:98"
+      ]
+    }
   }
 ]
