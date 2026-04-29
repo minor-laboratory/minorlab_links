@@ -74,7 +74,7 @@
 
 <main class="mx-auto flex min-h-dvh max-w-md flex-col px-5 pt-10 pb-10">
 	<header class="mb-10 flex items-center gap-2">
-		<span class="text-xl">🌱</span>
+		<img src="/mera.svg" alt="" class="h-7 w-auto" />
 		<span class="text-base font-semibold tracking-tight text-rooty-fg">{t.appName}</span>
 	</header>
 
