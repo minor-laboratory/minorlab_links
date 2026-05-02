@@ -13,8 +13,13 @@ import { env } from '$env/dynamic/public';
 
 const PROD_KEYSTORE_SHA =
 	'61:AE:42:B7:A4:9B:FF:6A:84:6F:CD:FC:79:0D:3A:7E:25:7A:46:18:35:72:96:BD:43:93:9B:84:F1:BA:38:98';
-const DEBUG_KEYSTORE_SHA =
-	'8B:55:27:A2:AC:5C:34:F8:F4:34:34:25:DC:7B:17:DC:C1:09:51:92:C0:6A:3F:AB:9C:BF:84:E2:15:C9:4E:A1';
+// 사이드로딩 debug keystore SHA — 개발자 머신마다 다를 수 있음.
+// 추가 머신 SHA 는 이 배열에 append. 본인 머신 SHA 확인:
+//   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android | grep SHA256
+const DEBUG_KEYSTORE_SHAS = [
+	'8B:55:27:A2:AC:5C:34:F8:F4:34:34:25:DC:7B:17:DC:C1:09:51:92:C0:6A:3F:AB:9C:BF:84:E2:15:C9:4E:A1',
+	'6E:13:A7:4A:CB:13:F6:56:F1:DB:76:D1:B2:C4:4E:3C:44:D8:39:C5:DF:EF:F9:7F:9C:48:6E:B7:2B:C5:F8:93'
+];
 
 const PROD_ENTRY = {
 	relation: ['delegate_permission/common.handle_all_urls'],
@@ -30,7 +35,7 @@ const DEV_ENTRY = {
 	target: {
 		namespace: 'android_app',
 		package_name: 'com.minorlab.rooty.dev',
-		sha256_cert_fingerprints: [PROD_KEYSTORE_SHA, DEBUG_KEYSTORE_SHA]
+		sha256_cert_fingerprints: [PROD_KEYSTORE_SHA, ...DEBUG_KEYSTORE_SHAS]
 	}
 };
 
