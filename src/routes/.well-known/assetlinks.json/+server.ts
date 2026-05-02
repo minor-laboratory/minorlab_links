@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { PUBLIC_ENV } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 // rooty Android App Link 검증용 assetlinks.json — 환경별 분기 (#1387).
 //
@@ -35,7 +35,7 @@ const DEV_ENTRY = {
 };
 
 export const GET: RequestHandler = () => {
-	const body = PUBLIC_ENV === 'dev' ? [DEV_ENTRY] : [PROD_ENTRY];
+	const body = env.PUBLIC_ENV === 'dev' ? [DEV_ENTRY] : [PROD_ENTRY];
 	return new Response(JSON.stringify(body, null, 2), {
 		headers: {
 			'content-type': 'application/json',
