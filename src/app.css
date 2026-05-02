@@ -1,0 +1,77 @@
+@import 'tailwindcss';
+@source '../src/**/*.{html,js,svelte,ts}';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * 루티 앱 답습 — Material 3 grayscale palette (theme_models.dart palettes.first).
+ *   group_invite_preview_page.dart §439-510: surfaceContainerHigh 카드, elevation 0.
+ *
+ * 라이트/다크 — `prefers-color-scheme` 자동 감지 (시스템 설정 답습).
+ *   Material 3 grayscale tonal palette (light=99/94/92/10/30/50/80, dark=10/12/17/90/80/60/30).
+ */
+@theme {
+	--color-rooty-bg: var(--rooty-bg);
+	--color-rooty-surface: var(--rooty-surface);
+	--color-rooty-surface-container: var(--rooty-surface-container);
+	--color-rooty-surface-container-high: var(--rooty-surface-container-high);
+	--color-rooty-fg: var(--rooty-fg);
+	--color-rooty-muted: var(--rooty-muted);
+	--color-rooty-outline: var(--rooty-outline);
+	--color-rooty-outline-variant: var(--rooty-outline-variant);
+	--color-rooty-primary: var(--rooty-primary);
+	--color-rooty-primary-fg: var(--rooty-primary-fg);
+	--radius-rooty-card: 0.75rem;
+	--radius-rooty-button: 0.5rem;
+}
+
+@layer base {
+	:root {
+		color-scheme: light dark;
+		--rooty-bg: #ffffff;
+		--rooty-surface: #ffffff;
+		--rooty-surface-container: #f3f0f4;
+		--rooty-surface-container-high: #ece6f0;
+		--rooty-fg: #1d1b20;
+		--rooty-muted: #49454f;
+		--rooty-outline: #cac4d0;
+		--rooty-outline-variant: #e7e0ec;
+		--rooty-primary: #18181b;
+		--rooty-primary-fg: #ffffff;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--rooty-bg: #141218;
+			--rooty-surface: #141218;
+			--rooty-surface-container: #211f26;
+			--rooty-surface-container-high: #2b2930;
+			--rooty-fg: #e6e0e9;
+			--rooty-muted: #cac4d0;
+			--rooty-outline: #938f99;
+			--rooty-outline-variant: #49454f;
+			--rooty-primary: #fafafa;
+			--rooty-primary-fg: #18181b;
+		}
+	}
+
+	html {
+		background-color: var(--rooty-bg);
+		color: var(--rooty-fg);
+	}
+
+	body {
+		margin: 0;
+		font-family:
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			'Pretendard',
+			'Apple SD Gothic Neo',
+			'Noto Sans KR',
+			Roboto,
+			sans-serif;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		text-rendering: optimizeLegibility;
+	}
+}
