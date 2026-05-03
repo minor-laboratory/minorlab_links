@@ -42,7 +42,17 @@
 	}
 
 	function openInApp() {
-		window.location.href = window.location.href;
+		// Android: intent:// 로 패키지 명시 force-open + 미설치 시 Play Store fallback.
+		// iOS: 커스텀 스킴 rooty://invite/{code} — 앱이 _handleUri 에서 /g/{code} 로 정규화.
+		// host 기반 dev/prod 분기 — dev.rooty.minorlab.com 은 com.minorlab.rooty.dev 패키지.
+		if (isAndroid) {
+			const host = window.location.host;
+			const pkg = host.startsWith('dev.') ? 'com.minorlab.rooty.dev' : 'com.minorlab.rooty';
+			const fallback = encodeURIComponent(STORE_ANDROID);
+			window.location.href = `intent://${host}/g/${data.code}#Intent;scheme=https;package=${pkg};S.browser_fallback_url=${fallback};end`;
+		} else if (isIOS) {
+			window.location.href = `rooty://invite/${data.code}`;
+		}
 	}
 
 	const ok = $derived(data.preview.status === 'ok');
