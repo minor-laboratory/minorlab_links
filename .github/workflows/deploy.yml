@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*-dev'
+      - 'v*-prod'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve target project
+        id: target
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          case "$TAG" in
+            *-dev)
+              echo "project=minorlab-links-dev" >> "$GITHUB_OUTPUT"
+              ;;
+            *-prod)
+              echo "project=minorlab-links" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unknown tag suffix: $TAG" >&2
+              exit 1
+              ;;
+          esac
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        env:
+          PROJECT: ${{ steps.target.outputs.project }}
+          TAG: ${{ github.ref_name }}
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: pages deploy .svelte-kit/cloudflare --project-name="$PROJECT" --commit-message="$TAG"
