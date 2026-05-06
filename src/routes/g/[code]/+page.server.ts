@@ -28,7 +28,8 @@ export const load: PageServerLoad = async ({ params, request, setHeaders }) => {
 	}
 
 	setHeaders({
-		'cache-control': 'public, max-age=60, s-maxage=60'
+		'cache-control': 'private, max-age=60',
+		vary: 'Accept-Language'
 	});
 
 	const ogTitle =
