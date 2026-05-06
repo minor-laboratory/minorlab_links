@@ -52,4 +52,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           PROJECT: ${{ steps.target.outputs.project }}
           TAG: ${{ github.ref_name }}
-        run: pnpm dlx wrangler@4 pages deploy .svelte-kit/cloudflare --project-name="$PROJECT" --commit-message="$TAG" --commit-dirty=true
+        run: pnpm dlx wrangler@4 pages deploy .svelte-kit/cloudflare --project-name="$PROJECT" --branch=main --commit-message="$TAG" --commit-dirty=true
